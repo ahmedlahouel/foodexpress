@@ -1,4 +1,4 @@
-// src/app/core/mock/mock.interceptor.ts
+// src/app/core/mock.interceptor.ts
 // Fakes the backend so the front-end can work before the real API is ready.
 // Services keep calling http://localhost:5000/api/... : to switch to the real
 // API, simply remove this interceptor from app.config.ts (or set useMock = false).
@@ -12,6 +12,10 @@ import {
 } from './mock-data';
 
 export const useMock = true;
+
+// TEMPORAIRE : si true, une requête sans token est traitée comme venant du client u1.
+// Mettre à false dès que le login d'Ahmed fonctionne.
+const DEV_FALLBACK_USER = false;
 
 // In-memory state (reset on page reload)
 const users: User[] = structuredClone(MOCK_USERS);
@@ -36,7 +40,9 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   const q = url.searchParams;
   const body: any = req.body ?? {};
   const auth = req.headers.get('Authorization')?.replace('Bearer ', '') ?? '';
-  const me = users.find((u) => tokenFor(u._id) === auth);
+  const me =
+    users.find((u) => tokenFor(u._id) === auth) ??
+    (DEV_FALLBACK_USER ? users[0] : undefined);
 
   // ---------- AUTH ----------
   if (req.method === 'POST' && path === '/auth/login') {
