@@ -30,13 +30,21 @@ Roles: `client`, `restaurateur`, `admin`
 | GET | /orders/restaurant/stats | Restaurateur | Bassem |
 
 ## JSON shapes
-Register (request):
-{ "nom": "Ali", "prenom": "Ahmed", "email": "ahmed@gmail.com", "telephone": "22123456", "password": "Secret123", "confirmation": "Secret123" }
+### Register (request)
+```json
+{ "nom": "Ali", "prenom": "Ahmed", "email": "ahmed@gmail.com", "telephone": "22123456",
+  "password": "Secret123", "confirmation": "Secret123" }
+```
+Password rule: at least 8 characters, one letter and one digit. The role is always `client`.
+Errors: 400 (missing field, mismatch, weak password), 409 (email already used).
 
-Login (request): { "email": "ahmed@gmail.com", "password": "Secret123" }
+### Login (request)
+```json
+{ "email": "ahmed@gmail.com", "password": "Secret123" }
+```
+Errors: 401 (wrong credentials), 403 (account deactivated).
 
-Login and register response:
-{ "token": "jwt...", "user": { "_id": "u1", "nom": "Ali", "prenom": "Ahmed", "role": "client" } }
+### Login and register response
 
 User: { "_id": "u1", "nom": "Ali", "prenom": "Ahmed", "email": "ahmed@gmail.com", "telephone": "22123456", "role": "client", "isActive": true }
 

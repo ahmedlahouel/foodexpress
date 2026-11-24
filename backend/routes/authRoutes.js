@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
-// TODO: define routes (see docs/api-contract.md)
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 
 module.exports = router;
