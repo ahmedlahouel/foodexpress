@@ -63,5 +63,10 @@ Order (response):
 { "_id": "o1", "client": "u1", "restaurant": "r1", "articles": [ { "plat": "d1", "nom": "Pizza Margherita", "quantite": 2, "prixUnitaire": 15 } ], "adresseLivraison": "Avenue Habib Bourguiba", "sousTotal": 30, "fraisLivraison": 5, "total": 35, "modePaiement": "livraison", "statut": "en_attente", "remarque": "Sans oignons" }
 
 Update status (request): { "statut": "acceptee" }
+Update profile (request, any of these fields): { "nom": "Ali", "prenom": "Ahmed", "telephone": "22123456" }
+Update profile response: the User shape above.
+
+Change password (request): { "currentPassword": "Secret123", "newPassword": "NewPass123", "confirmation": "NewPass123" }
+Change password response: { "message": "Mot de passe modifié" }  (errors are 400, never 401)
 
 Error: { "message": "Texte de l'erreur" }
