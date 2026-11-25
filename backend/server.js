@@ -15,6 +15,7 @@ app.use('/api/restaurants', require('./routes/restaurantRoutes'));
 app.use('/api/dishes', require('./routes/dishRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 app.use(require('./middleware/errorHandler'));
 
