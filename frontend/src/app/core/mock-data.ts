@@ -14,6 +14,7 @@ export interface Restaurant {
   _id: string; nom: string; description: string; adresse: string;
   typeCuisine: string; image: string; fraisLivraison: number;
   horaires: string; isOpen: boolean; owner: string;
+  validation?: 'en_attente' | 'validee' | 'suspendue'; // absent = validee
 }
 export interface Category { _id: string; nom: string; description: string; restaurant: string; }
 export interface Dish {
