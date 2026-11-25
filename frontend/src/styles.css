@@ -1,2 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* ===== Thème FoodExpress ===== */
+:root {
+  --fe-orange: #FF6B35;
+  --fe-orange-dark: #E55A25;
+  --fe-charcoal: #2B2D31;
+  --fe-bg: #F8F9FA;
+
+  /* on remplace la couleur "primary" de Bootstrap par l'orange */
+  --bs-primary: #FF6B35;
+  --bs-primary-rgb: 255, 107, 53;
+  --bs-link-color: #FF6B35;
+  --bs-link-hover-color: #E55A25;
+}
+
+body {
+  background-color: var(--fe-bg);
+  color: var(--fe-charcoal);
+}
+
+.btn-primary {
+  --bs-btn-bg: #FF6B35;
+  --bs-btn-border-color: #FF6B35;
+  --bs-btn-hover-bg: #E55A25;
+  --bs-btn-hover-border-color: #E55A25;
+  --bs-btn-active-bg: #E55A25;
+  --bs-btn-active-border-color: #E55A25;
+  --bs-btn-disabled-bg: #FF6B35;
+  --bs-btn-disabled-border-color: #FF6B35;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #FF6B35;
+  --bs-btn-border-color: #FF6B35;
+  --bs-btn-hover-bg: #FF6B35;
+  --bs-btn-hover-border-color: #FF6B35;
+  --bs-btn-active-bg: #E55A25;
+  --bs-btn-active-border-color: #E55A25;
+}
+
+.bg-charcoal { background-color: var(--fe-charcoal) !important; }
+.text-orange { color: var(--fe-orange) !important; }
