@@ -1,1 +1,68 @@
-<p>admin-categories works!</p>
+<div class="container my-4">
+  <h2 class="mb-3">Catégories</h2>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5>{{ editingId() ? 'Modifier la catégorie' : 'Ajouter une catégorie' }}</h5>
+      <form class="row g-2" (ngSubmit)="save()">
+        <div class="col-md-4">
+          <input name="nom" class="form-control" placeholder="Nom *"
+                 [ngModel]="nom()" (ngModelChange)="nom.set($event)" />
+        </div>
+        <div class="col-md-5">
+          <input name="description" class="form-control" placeholder="Description"
+                 [ngModel]="description()" (ngModelChange)="description.set($event)" />
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+          <button type="submit" class="btn btn-primary flex-fill">
+            {{ editingId() ? 'Enregistrer' : 'Ajouter' }}
+          </button>
+          @if (editingId()) {
+          <button type="button" class="btn btn-outline-dark" (click)="cancel()">Annuler</button>
+          }
+        </div>
+      </form>
+      @if (formError()) {
+      <div class="alert alert-danger mt-3 mb-0">{{ formError() }}</div>
+      }
+    </div>
+  </div>
+
+  <app-error-message [message]="error()" />
+
+  @if (loading()) {
+  <app-loading />
+  } @else {
+  <div class="table-responsive">
+    <table class="table table-hover align-middle bg-white">
+      <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      @for (c of categories(); track c._id) {
+      <tr>
+        <td>{{ c.nom }}</td>
+        <td>{{ c.description }}</td>
+        <td>
+                <span class="badge" [class.bg-primary]="!c.restaurant" [class.bg-secondary]="c.restaurant">
+                  {{ c.restaurant ? 'Restaurant' : 'Globale' }}
+                </span>
+        </td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-dark me-1" (click)="edit(c)">Modifier</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="remove(c)">Supprimer</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr><td colspan="4" class="text-center text-muted py-4">Aucune catégorie</td></tr>
+      }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>

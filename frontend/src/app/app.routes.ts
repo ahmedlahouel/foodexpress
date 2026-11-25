@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
+import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', loadComponent: () => import('./pages/home/home').then((m) => m.Home) },
@@ -12,6 +13,8 @@ export const routes: Routes = [
 
     { path: 'login', loadComponent: () => import('./pages/login/login').then((m) => m.Login) },
     { path: 'register', loadComponent: () => import('./pages/register/register').then((m) => m.Register) },
-    // TODO (Ahmed) : routes admin (users, stats, categories) avec roleGuard
+      { path: 'admin/users', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-users/admin-users').then((m) => m.AdminUsers) },
+      { path: 'admin/stats', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-statistics/admin-statistics').then((m) => m.AdminStatistics) },
+      { path: 'admin/categories', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-categories/admin-categories').then((m) => m.AdminCategories) },
   { path: '**', redirectTo: '' },
 ];

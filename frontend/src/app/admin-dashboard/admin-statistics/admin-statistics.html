@@ -1,1 +1,44 @@
-<p>admin-statistics works!</p>
+<div class="container my-4">
+  <h2 class="mb-3">Statistiques</h2>
+
+  <app-error-message [message]="error()" />
+
+  @if (loading()) {
+  <app-loading />
+  } @else if (stats(); as s) {
+  <div class="row g-3">
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.clients }}</div>
+          <div class="text-muted">Clients</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.restaurants }}</div>
+          <div class="text-muted">Restaurants</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.orders }}</div>
+          <div class="text-muted">Commandes</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.revenue }} DT</div>
+          <div class="text-muted">Chiffre d'affaires</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

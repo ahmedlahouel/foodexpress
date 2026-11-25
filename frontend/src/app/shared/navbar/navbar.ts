@@ -41,6 +41,9 @@ import { CartService } from '../../core/services/cart.service';
             }
             @if (session.role() === 'admin') {
               <li class="nav-item">
+                <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">Catégories</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" routerLink="/admin/restaurants" routerLinkActive="active">Restaurants</a>
               </li>
               <li class="nav-item">
