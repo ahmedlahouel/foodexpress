@@ -10,6 +10,8 @@ export const routes: Routes = [
   { path: 'my-orders', canActivate: [authGuard], loadComponent: () => import('./pages/my-orders/my-orders').then((m) => m.MyOrders) },
   { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./pages/profile/profile').then((m) => m.Profile) },
 
-  // TODO (Ahmed) : garder/ajouter ici les routes login, register et admin
+    { path: 'login', loadComponent: () => import('./pages/login/login').then((m) => m.Login) },
+    { path: 'register', loadComponent: () => import('./pages/register/register').then((m) => m.Register) },
+    // TODO (Ahmed) : routes admin (users, stats, categories) avec roleGuard
   { path: '**', redirectTo: '' },
 ];
