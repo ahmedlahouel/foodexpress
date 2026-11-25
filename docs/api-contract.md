@@ -15,6 +15,7 @@ Roles: `client`, `restaurateur`, `admin`
 | PUT | /users/me/password | Logged in | Ahmed |
 | GET | /admin/users?search= | Admin | Ahmed |
 | PUT | /admin/users/:id/status | Admin | Ahmed |
+| PUT | /admin/users/:id/role | Admin | Ahmed |
 | GET | /admin/stats | Admin | Ahmed |
 | GET | /restaurants?search=&cuisine=&open=true&sort=nom | Public | Bassem |
 | GET | /restaurants/:id | Public | Bassem |
@@ -70,3 +71,7 @@ Change password (request): { "currentPassword": "Secret123", "newPassword": "New
 Change password response: { "message": "Mot de passe modifié" }  (errors are 400, never 401)
 
 Error: { "message": "Texte de l'erreur" }
+
+Admin users list (response): { "users": [User], "total": 12, "page": 1, "totalPages": 2 }
+Admin set status (request): { "isActive": false }   Admin set role (request): { "role": "restaurateur" }
+Admin stats (response): { "clients": 3, "restaurants": 3, "orders": 5, "revenue": 120 }
