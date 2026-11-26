@@ -1,1 +1,84 @@
-<p>dashboard works!</p>
+<div class="container my-4">
+  <h2 class="mb-3">Tableau de bord</h2>
+
+  <app-error-message [message]="error()" />
+
+  @if (loading()) {
+  <app-loading />
+  } @else if (stats(); as s) {
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.totalCommandes }}</div>
+          <div class="text-muted">Commandes</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.enAttente }}</div>
+          <div class="text-muted">En attente</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.acceptees }}</div>
+          <div class="text-muted">Acceptées</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-orange">{{ s.chiffreAffaires }} DT</div>
+          <div class="text-muted">Chiffre d'affaires</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="mb-3">Plats les plus commandés</h5>
+          @for (p of s.platsPopulaires; track p._id) {
+          <div class="d-flex justify-content-between border-bottom py-2">
+            <span>{{ p.nom }}</span>
+            <span class="fw-bold">{{ p.quantiteTotale }}</span>
+          </div>
+          } @empty {
+          <p class="text-muted mb-0">Aucune commande pour le moment</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Nouvelles commandes</h5>
+            <a routerLink="/restaurant/orders" class="btn btn-sm btn-outline-dark">Tout voir</a>
+          </div>
+          @for (o of newOrders(); track o._id) {
+          <div class="d-flex justify-content-between border-bottom py-2">
+            <div>
+              <div>{{ o.client.prenom }} {{ o.client.nom }} · {{ o.restaurant.nom }}</div>
+              <div class="text-muted small">{{ o.createdAt | date: 'dd/MM/yyyy HH:mm' }}</div>
+            </div>
+            <span class="fw-bold align-self-center">{{ o.total }} DT</span>
+          </div>
+          } @empty {
+          <p class="text-muted mb-0">Aucune commande en attente</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
