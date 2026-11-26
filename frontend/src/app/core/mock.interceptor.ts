@@ -11,7 +11,7 @@ import {
   MOCK_RESTAURANTS, MOCK_USERS, Order, Restaurant, Statut, User,
 } from './mock-data';
 
-export const useMock = true;
+export const useMock = false;
 
 // TEMPORARY: a request without token is treated as coming from this user.
 // 'u1' = client, 'u2' = restaurateur, 'u3' = admin. Set to null once the real login works.
