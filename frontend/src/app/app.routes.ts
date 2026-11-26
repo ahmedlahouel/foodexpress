@@ -19,5 +19,6 @@ export const routes: Routes = [
     { path: 'restaurant/dashboard', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/dashboard/dashboard').then((m) => m.Dashboard) },
     { path: 'restaurant/dishes', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/manage-dishes/manage-dishes').then((m) => m.ManageDishes) },
     { path: 'restaurant/orders', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/manage-orders/manage-orders').then((m) => m.ManageOrders) },
+    { path: 'admin/restaurants', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-restaurants/admin-restaurants').then((m) => m.AdminRestaurants) },
   { path: '**', redirectTo: '' },
 ];

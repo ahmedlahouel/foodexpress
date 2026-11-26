@@ -1,1 +1,131 @@
-<p>admin-restaurants works!</p>
+<div class="container my-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="mb-0">Restaurants</h2>
+    <select class="form-select w-auto" [ngModel]="statutFilter()"
+            (ngModelChange)="statutFilter.set($event); load()">
+      <option value="">Tous les statuts</option>
+      @for (s of statuts; track s) {
+      <option [value]="s">{{ label(s) }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5>{{ editingId() ? 'Modifier le restaurant' : 'Ajouter un restaurant' }}</h5>
+      <form class="row g-2" (ngSubmit)="save()">
+        <div class="col-md-4">
+          <input name="nom" class="form-control" placeholder="Nom *"
+                 [ngModel]="nom()" (ngModelChange)="nom.set($event)" />
+        </div>
+        <div class="col-md-4">
+          <input name="adresse" class="form-control" placeholder="Adresse *"
+                 [ngModel]="adresse()" (ngModelChange)="adresse.set($event)" />
+        </div>
+        <div class="col-md-4">
+          <input name="typeCuisine" class="form-control" placeholder="Type de cuisine *"
+                 [ngModel]="typeCuisine()" (ngModelChange)="typeCuisine.set($event)" />
+        </div>
+        <div class="col-md-3">
+          <input name="fraisLivraison" type="number" min="0" step="0.1" class="form-control"
+                 placeholder="Frais de livraison (DT) *"
+                 [ngModel]="fraisLivraison()" (ngModelChange)="fraisLivraison.set($event)" />
+        </div>
+        <div class="col-md-3">
+          <input name="horaires" class="form-control" placeholder="Horaires (ex: 11:00 - 23:00)"
+                 [ngModel]="horaires()" (ngModelChange)="horaires.set($event)" />
+        </div>
+        <div class="col-md-3">
+          @if (editingId()) {
+          <input class="form-control" [value]="'Propriétaire : ' + editingOwner()" disabled />
+          } @else {
+          <select name="owner" class="form-select" [ngModel]="owner()" (ngModelChange)="owner.set($event)">
+            <option value="">Propriétaire *</option>
+            @for (o of owners(); track o._id) {
+            <option [value]="o._id">{{ o.prenom }} {{ o.nom }} ({{ o.email }})</option>
+            }
+          </select>
+          }
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+          <div class="form-check">
+            <input name="isOpen" type="checkbox" class="form-check-input" id="isOpen"
+                   [ngModel]="isOpen()" (ngModelChange)="isOpen.set($event)" />
+            <label class="form-check-label" for="isOpen">Ouvert</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <input name="description" class="form-control" placeholder="Description"
+                 [ngModel]="description()" (ngModelChange)="description.set($event)" />
+        </div>
+        <div class="col-md-6">
+          <input name="image" class="form-control" placeholder="Image (URL ou nom de fichier)"
+                 [ngModel]="image()" (ngModelChange)="image.set($event)" />
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary">{{ editingId() ? 'Enregistrer' : 'Ajouter' }}</button>
+          @if (editingId()) {
+          <button type="button" class="btn btn-outline-dark" (click)="cancel()">Annuler</button>
+          }
+        </div>
+      </form>
+      @if (formError()) {
+      <div class="alert alert-danger mt-3 mb-0">{{ formError() }}</div>
+      }
+    </div>
+  </div>
+
+  <app-error-message [message]="error()" />
+
+  @if (loading()) {
+  <app-loading />
+  } @else {
+  <div class="table-responsive">
+    <table class="table table-hover align-middle bg-white">
+      <thead>
+      <tr>
+        <th>Restaurant</th>
+        <th>Propriétaire</th>
+        <th>Livraison</th>
+        <th>Ouverture</th>
+        <th>Validation</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      @for (r of restaurants(); track r._id) {
+      <tr>
+        <td>
+          <div>{{ r.nom }}</div>
+          <div class="text-muted small">{{ r.typeCuisine }} · {{ r.adresse }}</div>
+        </td>
+        <td>
+          <div>{{ r.owner?.prenom }} {{ r.owner?.nom }}</div>
+          <div class="text-muted small">{{ r.owner?.email }}</div>
+        </td>
+        <td>{{ r.fraisLivraison }} DT</td>
+        <td>
+                <span class="badge" [class.bg-success]="r.isOpen" [class.bg-secondary]="!r.isOpen">
+                  {{ r.isOpen ? 'Ouvert' : 'Fermé' }}
+                </span>
+        </td>
+        <td><span [class]="badge(r.statutValidation)">{{ label(r.statutValidation) }}</span></td>
+        <td class="text-end text-nowrap">
+          @if (r.statutValidation !== 'valide') {
+          <button class="btn btn-sm btn-success me-1" (click)="setValidation(r, 'valide')">Valider</button>
+          }
+          @if (r.statutValidation === 'valide') {
+          <button class="btn btn-sm btn-outline-warning me-1" (click)="setValidation(r, 'suspendu')">Suspendre</button>
+          }
+          <button class="btn btn-sm btn-outline-dark me-1" (click)="edit(r)">Modifier</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="remove(r)">Supprimer</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr><td colspan="6" class="text-center text-muted py-4">Aucun restaurant</td></tr>
+      }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>

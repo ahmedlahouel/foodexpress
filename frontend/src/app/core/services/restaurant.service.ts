@@ -10,6 +10,26 @@ export interface RestaurantFilters {
   sort?: string;
 }
 
+// Same names as the backend: statutValidation en_attente / valide / suspendu
+export type Validation = 'en_attente' | 'valide' | 'suspendu';
+
+// Admin list: all statuses, owner populated by the backend
+export interface AdminRestaurant extends Omit<Restaurant, 'owner' | 'validation'> {
+  owner: { _id: string; nom: string; prenom: string; email: string } | null;
+  statutValidation: Validation;
+}
+
+export interface RestaurantPayload {
+  nom: string;
+  description?: string;
+  adresse: string;
+  typeCuisine: string;
+  image?: string;
+  fraisLivraison: number;
+  horaires?: string;
+  isOpen?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class RestaurantService {
   private http = inject(HttpClient);
@@ -31,5 +51,27 @@ export class RestaurantService {
   // Restaurants owned by the logged-in restaurateur
   getMine() {
     return this.http.get<Restaurant[]>(`${API_URL}/restaurants/mine`);
+  }
+
+  // ---------- Admin ----------
+  getAllAdmin(statut: Validation | '' = '') {
+    const qs = statut ? `?statutValidation=${statut}` : '';
+    return this.http.get<AdminRestaurant[]>(`${API_URL}/restaurants/admin/all${qs}`);
+  }
+
+  create(body: RestaurantPayload & { owner: string }) {
+    return this.http.post<Restaurant>(`${API_URL}/restaurants`, body);
+  }
+
+  update(id: string, body: Partial<RestaurantPayload>) {
+    return this.http.put<Restaurant>(`${API_URL}/restaurants/${id}`, body);
+  }
+
+  remove(id: string) {
+    return this.http.delete<{ message: string }>(`${API_URL}/restaurants/${id}`);
+  }
+
+  setValidation(id: string, statutValidation: Validation) {
+    return this.http.put<Restaurant>(`${API_URL}/restaurants/${id}/validation`, { statutValidation });
   }
 }
