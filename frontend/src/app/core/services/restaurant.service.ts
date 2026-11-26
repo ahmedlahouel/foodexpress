@@ -27,4 +27,9 @@ export class RestaurantService {
   getById(id: string) {
     return this.http.get<Restaurant>(`${API_URL}/restaurants/${id}`);
   }
+
+  // Restaurants owned by the logged-in restaurateur
+  getMine() {
+    return this.http.get<Restaurant[]>(`${API_URL}/restaurants/mine`);
+  }
 }
