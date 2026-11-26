@@ -4,7 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 
 const app = express();
-app.use(cors());
+app.use(cors({ exposedHeaders: ['X-Total-Count', 'X-Total-Pages'] }));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));

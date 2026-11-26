@@ -12,7 +12,15 @@ const signToken = (user) =>
 
 const authResponse = (user) => ({
   token: signToken(user),
-  user: { _id: user._id, nom: user.nom, prenom: user.prenom, role: user.role },
+  user: {
+    _id: user._id,
+    nom: user.nom,
+    prenom: user.prenom,
+    email: user.email,
+    telephone: user.telephone,
+    role: user.role,
+    isActive: user.isActive,
+  },
 });
 
 const register = async (req, res, next) => {
