@@ -13,8 +13,11 @@ export const routes: Routes = [
 
     { path: 'login', loadComponent: () => import('./pages/login/login').then((m) => m.Login) },
     { path: 'register', loadComponent: () => import('./pages/register/register').then((m) => m.Register) },
-      { path: 'admin/users', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-users/admin-users').then((m) => m.AdminUsers) },
-      { path: 'admin/stats', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-statistics/admin-statistics').then((m) => m.AdminStatistics) },
-      { path: 'admin/categories', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-categories/admin-categories').then((m) => m.AdminCategories) },
+    { path: 'admin/users', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-users/admin-users').then((m) => m.AdminUsers) },
+    { path: 'admin/stats', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-statistics/admin-statistics').then((m) => m.AdminStatistics) },
+    { path: 'admin/categories', canActivate: [roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./admin-dashboard/admin-categories/admin-categories').then((m) => m.AdminCategories) },
+    { path: 'restaurant/dashboard', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/dashboard/dashboard').then((m) => m.Dashboard) },
+    { path: 'restaurant/dishes', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/manage-dishes/manage-dishes').then((m) => m.ManageDishes) },
+    { path: 'restaurant/orders', canActivate: [roleGuard], data: { roles: ['restaurateur'] }, loadComponent: () => import('./restaurant-dashboard/manage-orders/manage-orders').then((m) => m.ManageOrders) },
   { path: '**', redirectTo: '' },
 ];
