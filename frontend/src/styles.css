@@ -42,3 +42,7 @@ body {
 
 .bg-charcoal { background-color: var(--fe-charcoal) !important; }
 .text-orange { color: var(--fe-orange) !important; }
+
+/* ===== Bonus : cartes avec effet "hover-lift" ===== */
+.card { transition: transform .2s ease, box-shadow .2s ease; }
+a:hover > .card, .card.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .12) !important; }

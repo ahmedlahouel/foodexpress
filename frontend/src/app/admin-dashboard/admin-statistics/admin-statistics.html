@@ -40,5 +40,28 @@
       </div>
     </div>
   </div>
+
+  @if (statusChart(); as sc) {
+  <div class="row g-3 mt-1">
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="mb-3">Commandes par statut</h5>
+          <app-chart-canvas [config]="sc" />
+        </div>
+      </div>
+    </div>
+    @if (revenueChart(); as rc) {
+    <div class="col-lg-7">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="mb-3">Chiffre d'affaires (14 derniers jours)</h5>
+          <app-chart-canvas [config]="rc" />
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
   }
 </div>

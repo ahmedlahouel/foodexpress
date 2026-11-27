@@ -1545,7 +1545,9 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"status 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"4 counters\", () => pm.expect(pm.response.json()).to.have.keys(\"clients\",\"restaurants\",\"orders\",\"revenue\"));"
+                  "const st = pm.response.json();",
+                  "pm.test(\"4 counters\", () => pm.expect(st).to.include.all.keys(\"clients\",\"restaurants\",\"orders\",\"revenue\"));",
+                  "pm.test(\"chart data (bonus) is optional but well-formed\", () => { if (st.ordersByStatus) { pm.expect(Object.values(st.ordersByStatus).reduce((a, b) => a + b, 0)).to.eql(st.orders); } if (st.revenueByDay) { pm.expect(st.revenueByDay).to.be.an(\"array\"); } });"
                 ]
               }
             }

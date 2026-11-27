@@ -25,6 +25,9 @@ export interface AdminStats {
   restaurants: number;
   orders: number;
   revenue: number;
+  // bonus (optionnels : le front fonctionne même si le back ne les renvoie pas)
+  ordersByStatus?: Record<string, number>;
+  revenueByDay?: { date: string; total: number }[];
 }
 
 export interface AdminUserFilters {

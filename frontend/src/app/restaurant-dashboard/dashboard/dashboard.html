@@ -46,12 +46,9 @@
       <div class="card h-100">
         <div class="card-body">
           <h5 class="mb-3">Plats les plus commandés</h5>
-          @for (p of s.platsPopulaires; track p._id) {
-          <div class="d-flex justify-content-between border-bottom py-2">
-            <span>{{ p.nom }}</span>
-            <span class="fw-bold">{{ p.quantiteTotale }}</span>
-          </div>
-          } @empty {
+          @if (s.platsPopulaires.length) {
+          <app-chart-canvas [config]="dishesChart()" />
+          } @else {
           <p class="text-muted mb-0">Aucune commande pour le moment</p>
           }
         </div>
@@ -76,6 +73,25 @@
           } @empty {
           <p class="text-muted mb-0">Aucune commande en attente</p>
           }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-1">
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="mb-3">Commandes par statut</h5>
+          <app-chart-canvas [config]="statusChart()" />
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="mb-3">Chiffre d'affaires par jour</h5>
+          <app-chart-canvas [config]="revenueChart()" />
         </div>
       </div>
     </div>

@@ -84,7 +84,12 @@ const setUserRole = async (req, res, next) => {
 // GET /api/admin/stats
 const getStats = async (req, res, next) => {
   try {
-    const [clients, restaurants, orders, revenueAgg] = await Promise.all([
+    // 14 derniers jours pour la courbe du chiffre d'affaires
+    const since = new Date();
+    since.setDate(since.getDate() - 13);
+    since.setHours(0, 0, 0, 0);
+
+    const [clients, restaurants, orders, revenueAgg, statusAgg, dayAgg] = await Promise.all([
       User.countDocuments({ role: 'client' }),
       Restaurant.countDocuments(),
       Order.countDocuments(),
@@ -92,9 +97,29 @@ const getStats = async (req, res, next) => {
         { $match: { statut: { $in: REVENUE_STATUSES } } },
         { $group: { _id: null, total: { $sum: '$total' } } },
       ]),
+      // bonus : nombre de commandes par statut
+      Order.aggregate([{ $group: { _id: '$statut', count: { $sum: 1 } } }]),
+      // bonus : chiffre d'affaires par jour
+      Order.aggregate([
+        { $match: { statut: { $in: REVENUE_STATUSES }, createdAt: { $gte: since } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+            total: { $sum: '$total' },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
     ]);
 
-    res.json({ clients, restaurants, orders, revenue: revenueAgg.length ? revenueAgg[0].total : 0 });
+    res.json({
+      clients,
+      restaurants,
+      orders,
+      revenue: revenueAgg.length ? revenueAgg[0].total : 0,
+      ordersByStatus: Object.fromEntries(statusAgg.map((s) => [s._id, s.count])),
+      revenueByDay: dayAgg.map((d) => ({ date: d._id, total: d.total })),
+    });
   } catch (err) {
     next(err);
   }

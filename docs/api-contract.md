@@ -75,3 +75,12 @@ Error: { "message": "Texte de l'erreur" }
 Admin users list (response): { "users": [User], "total": 12, "page": 1, "totalPages": 2 }
 Admin set status (request): { "isActive": false }   Admin set role (request): { "role": "restaurateur" }
 Admin stats (response): { "clients": 3, "restaurants": 3, "orders": 5, "revenue": 120 }
+
+## Bonus : avis et statistiques
+| Method | Endpoint | Access | Notes |
+|--------|----------|--------|-------|
+| GET | /restaurants/:id/reviews | Public | `{ reviews: [{ _id, note, commentaire, createdAt, client, auteur }], moyenne, total }` |
+| POST | /restaurants/:id/reviews | Client | body `{ note: 1..5, commentaire? }`. 403 sans commande `livree` dans ce restaurant. Un second envoi modifie l'avis. |
+
+- `GET /restaurants` et `GET /restaurants/:id` renvoient en plus `noteMoyenne` et `nbAvis`.
+- `GET /admin/stats` renvoie en plus `ordersByStatus` (`{ statut: nombre }`) et `revenueByDay` (`[{ date, total }]`, 14 derniers jours).

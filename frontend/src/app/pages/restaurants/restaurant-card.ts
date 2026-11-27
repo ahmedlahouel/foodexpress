@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Restaurant } from '../../core/mock-data';
+import { Stars } from '../../shared/stars';
 
 @Component({
   selector: 'app-restaurant-card',
-  imports: [RouterLink],
+  imports: [RouterLink, Stars],
   template: `
     <div class="card h-100 shadow-sm">
       <div class="position-relative d-flex align-items-center justify-content-center"
@@ -20,6 +21,14 @@ import { Restaurant } from '../../core/mock-data';
           <span class="badge" [class.bg-success]="restaurant().isOpen" [class.bg-secondary]="!restaurant().isOpen">
             {{ restaurant().isOpen ? 'Ouvert' : 'Fermé' }}
           </span>
+        </div>
+        <div class="mb-1 d-flex align-items-center gap-2">
+          @if (restaurant().nbAvis) {
+            <app-stars [value]="restaurant().noteMoyenne ?? 0" size="1rem" />
+            <small class="text-muted">{{ restaurant().noteMoyenne }} ({{ restaurant().nbAvis }})</small>
+          } @else {
+            <small class="text-muted">Pas encore d'avis</small>
+          }
         </div>
         <p class="text-muted small mb-2">{{ restaurant().typeCuisine }} · {{ restaurant().horaires }}</p>
         <p class="small mb-3">Livraison : {{ restaurant().fraisLivraison }} DT</p>
