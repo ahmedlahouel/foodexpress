@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Restaurant = require('../models/Restaurant');
 const Dish = require('../models/Dish');
 const { getUserId, isAdmin } = require('../middleware/ownership');
+const { withRatings, withRating } = require('../utils/ratings');
 
 // Échappe les caractères spéciaux pour éviter l'injection de regex
 const escapeRegex = str => String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -29,7 +30,7 @@ exports.getAll = async (req, res) => {
     res.set('X-Total-Pages', String(Math.ceil(total / limit)));
     query = query.skip((page - 1) * limit).limit(limit);
   }
-  res.json(await query);
+  res.json(await withRatings(await query.lean()));
 };
 
 // Restaurateur : voir ses propres restaurants (tous statuts)
@@ -49,9 +50,9 @@ exports.getAllAdmin = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const restaurant = await Restaurant.findOne({ _id: req.params.id, statutValidation: 'valide' });
+  const restaurant = await Restaurant.findOne({ _id: req.params.id, statutValidation: 'valide' }).lean();
   if (!restaurant) return res.status(404).json({ message: 'Restaurant introuvable' });
-  res.json(restaurant);
+  res.json(await withRating(restaurant));
 };
 
 // According to the agreed work split, creation/deletion and validation are admin actions.

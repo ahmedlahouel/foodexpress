@@ -15,6 +15,7 @@ export interface Restaurant {
   typeCuisine: string; image: string; fraisLivraison: number;
   horaires: string; isOpen: boolean; owner: string;
   validation?: 'en_attente' | 'validee' | 'suspendue'; // absent = validee
+  noteMoyenne?: number; nbAvis?: number; // avis clients (renvoyés par le backend)
 }
 export interface Category { _id: string; nom: string; description: string; restaurant: string; }
 export interface Dish {

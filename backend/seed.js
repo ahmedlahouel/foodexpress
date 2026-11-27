@@ -6,6 +6,7 @@ const Restaurant = require('./models/Restaurant');
 const Category = require('./models/Category');
 const Dish = require('./models/Dish');
 const Order = require('./models/Order');
+const Review = require('./models/Review');
 
 const ADMIN_PASSWORD = 'Admin1234';
 const DEMO_PASSWORD = 'Test1234';
@@ -15,7 +16,7 @@ const seed = async () => {
   console.log('Connected to database:', mongoose.connection.name);
 
   // 1. Wipe everything so the demo always starts from the same data
-  await Promise.all([User, Restaurant, Category, Dish, Order].map((m) => m.deleteMany({})));
+  await Promise.all([User, Restaurant, Category, Dish, Order, Review].map((m) => m.deleteMany({})));
 
   // 2. Users (create() runs the pre-save hook, so passwords are hashed)
   const [, resto1, resto2, client1, client2] = await User.create([
@@ -30,9 +31,9 @@ const seed = async () => {
 
   // 3. Restaurants (statutValidation must be 'valide', otherwise public routes hide them)
   const [darPizza, harissa, chezMamma] = await Restaurant.insertMany([
-    { nom: 'Dar Pizza', description: 'Pizzas au feu de bois', adresse: 'Avenue Habib Bourguiba, Bizerte', typeCuisine: 'Pizza', fraisLivraison: 3, horaires: '11:00 - 23:00', isOpen: true, owner: resto1._id, statutValidation: 'valide' },
-    { nom: 'Harissa Grill', description: 'Grillades et spécialités tunisiennes', adresse: 'Rue de la Corniche, Bizerte', typeCuisine: 'Grillades', fraisLivraison: 2.5, horaires: '12:00 - 00:00', isOpen: true, owner: resto2._id, statutValidation: 'valide' },
-    { nom: 'Chez Mamma', description: 'Cuisine traditionnelle comme à la maison', adresse: 'Rue Ibn Khaldoun, Bizerte', typeCuisine: 'Tunisienne', fraisLivraison: 3, horaires: '10:00 - 22:00', isOpen: true, owner: resto1._id, statutValidation: 'valide' },
+    { nom: 'Dar Pizza', image: 'dar-pizza.jpg', description: 'Pizzas au feu de bois', adresse: 'Avenue Habib Bourguiba, Bizerte', typeCuisine: 'Pizza', fraisLivraison: 3, horaires: '11:00 - 23:00', isOpen: true, owner: resto1._id, statutValidation: 'valide' },
+    { nom: 'Harissa Grill', image: 'harissa-grill.jpg', description: 'Grillades et spécialités tunisiennes', adresse: 'Rue de la Corniche, Bizerte', typeCuisine: 'Grillades', fraisLivraison: 2.5, horaires: '12:00 - 00:00', isOpen: true, owner: resto2._id, statutValidation: 'valide' },
+    { nom: 'Chez Mamma', image: 'chez-mamma.jpg', description: 'Cuisine traditionnelle comme à la maison', adresse: 'Rue Ibn Khaldoun, Bizerte', typeCuisine: 'Tunisienne', fraisLivraison: 3, horaires: '10:00 - 22:00', isOpen: true, owner: resto1._id, statutValidation: 'valide' },
   ]);
 
   // 4. Global categories (restaurant = null, usable by every restaurant)
@@ -97,6 +98,13 @@ const seed = async () => {
     makeOrder(client2, harissa, [[dish['Mixed Grill'], 2], [dish['Jus d\'orange'], 2]], 'en_preparation'),
     makeOrder(client2, darPizza, [[dish['Pizza Thon'], 1]], 'en_livraison'),
     makeOrder(client2, chezMamma, [[dish['Couscous à l\'agneau'], 1], [dish['Thé à la menthe'], 2]], 'annulee'),
+  ]);
+
+  // 7. Quelques avis pour la démo
+  await Review.insertMany([
+    { restaurant: darPizza._id, client: client1._id, note: 5, commentaire: 'Pizza délicieuse, livraison rapide !' },
+    { restaurant: darPizza._id, client: client2._id, note: 4, commentaire: 'Très bon, un peu de retard.' },
+    { restaurant: harissa._id, client: client1._id, note: 5, commentaire: 'Les meilleures grillades de la ville.' },
   ]);
 
   console.log('Seed done: 6 users, 3 restaurants, 6 categories, 16 dishes, 6 orders');
