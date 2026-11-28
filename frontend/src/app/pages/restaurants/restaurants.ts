@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RestaurantService } from '../../core/services/restaurant.service';
 import { Restaurant } from '../../core/mock-data';
+import { LocationService } from '../../core/services/location.service';
 import { RestaurantCard } from './restaurant-card';
 
 @Component({
@@ -30,12 +31,22 @@ import { RestaurantCard } from './restaurant-card';
             <label class="form-check-label" for="open">Ouverts</label>
           </div>
         </div>
-        <div class="col-12 col-md-3">
+        <div class="col-6 col-md-3">
           <button class="btn btn-outline-dark w-100" (click)="toggleSort()">
             Tri A-Z : {{ sortAlpha() ? 'activé' : 'désactivé' }}
           </button>
         </div>
+        <div class="col-6 col-md-12 col-lg-auto">
+          <button class="btn w-100" [class.btn-primary]="nearMe()" [class.btn-outline-primary]="!nearMe()"
+                  [disabled]="loc.loading()" (click)="toggleNearMe()">
+            📍 {{ loc.loading() ? 'Localisation...' : nearMe() ? 'Près de moi : activé' : 'Près de moi' }}
+          </button>
+        </div>
       </div>
+      @if (loc.error()) { <div class="alert alert-warning py-2">{{ loc.error() }}</div> }
+      @if (nearMe()) {
+        <p class="small text-muted">Restaurants triés du plus proche au plus éloigné (les restaurants sans position sont à la fin).</p>
+      }
 
       @if (paged().length === 0) {
         <p class="text-muted">Aucun restaurant trouvé.</p>
@@ -69,6 +80,7 @@ import { RestaurantCard } from './restaurant-card';
 export class Restaurants {
   private api = inject(RestaurantService);
   private route = inject(ActivatedRoute);
+  loc = inject(LocationService);
 
   readonly pageSize = 6;
   search = signal(this.route.snapshot.queryParamMap.get('search') ?? '');
@@ -77,8 +89,21 @@ export class Restaurants {
   sortAlpha = signal(false);
   page = signal(1);
 
-  list = signal<Restaurant[]>([]);
+  nearMe = signal(false);
+  raw = signal<Restaurant[]>([]);
   cuisines = signal<string[]>([]);
+
+  // liste affichée : triée par distance si « Près de moi » est activé
+  list = computed(() => {
+    const items = this.raw();
+    const me = this.loc.position();
+    if (!this.nearMe() || !me) return items;
+    const dist = (r: Restaurant) =>
+      r.latitude == null || r.longitude == null
+        ? Infinity
+        : this.loc.distanceKm(me, { lat: r.latitude, lng: r.longitude });
+    return [...items].sort((a, b) => dist(a) - dist(b));
+  });
 
   totalPages = computed(() => Math.max(1, Math.ceil(this.list().length / this.pageSize)));
   pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
@@ -90,6 +115,20 @@ export class Restaurants {
   constructor() {
     this.api.getAll().subscribe((all) => this.cuisines.set([...new Set(all.map((r) => r.typeCuisine))]));
     this.load();
+    // arrivée depuis le bouton « Près de moi » de l'accueil
+    if (this.route.snapshot.queryParamMap.get('near')) this.toggleNearMe();
+  }
+
+  async toggleNearMe() {
+    if (this.nearMe()) {
+      this.nearMe.set(false);
+      return;
+    }
+    const pos = this.loc.position() ?? (await this.loc.locate());
+    if (pos) {
+      this.nearMe.set(true);
+      this.page.set(1);
+    }
   }
 
   toggleSort() {
@@ -106,6 +145,6 @@ export class Restaurants {
         open: this.openOnly(),
         sort: this.sortAlpha() ? 'nom' : undefined,
       })
-      .subscribe((r) => this.list.set(r));
+      .subscribe((r) => this.raw.set(r));
   }
 }

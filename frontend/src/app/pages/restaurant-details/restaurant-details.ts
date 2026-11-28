@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { forkJoin } from 'rxjs';
 import { RestaurantService } from '../../core/services/restaurant.service';
 import { DishService } from '../../core/services/dish.service';
@@ -33,9 +34,21 @@ import { Stars } from '../../shared/stars';
             <p class="small mb-0">{{ r.typeCuisine }} · {{ r.horaires }} · Livraison {{ r.fraisLivraison }} DT
               <span class="badge ms-2" [class.bg-success]="r.isOpen" [class.bg-secondary]="!r.isOpen">
                 {{ r.isOpen ? 'Ouvert' : 'Fermé' }}</span></p>
+            <p class="small mb-0 mt-1">📍 {{ r.adresse }}
+              · <a [href]="mapsLink(r)" target="_blank" rel="noopener">Itinéraire</a>
+              @if (hasCoords(r)) {
+                · <button type="button" class="btn btn-link p-0 align-baseline small" (click)="showMap.set(!showMap())">{{ showMap() ? 'Masquer la carte' : 'Voir sur la carte' }}</button>
+              }
+            </p>
           </div>
           <a routerLink="/cart" class="btn btn-dark">🛒 Panier ({{ cart.count() }})</a>
         </div>
+
+        @if (showMap() && mapUrl()) {
+          <div class="ratio ratio-21x9 mb-3 rounded-4 overflow-hidden shadow-sm">
+            <iframe [src]="mapUrl()!" title="Carte" loading="lazy"></iframe>
+          </div>
+        }
 
         @for (g of groups(); track g.cat._id) {
           <h4 class="mt-4">{{ g.cat.nom }}</h4>
@@ -117,6 +130,28 @@ export class RestaurantDetails {
   categories = signal<Category[]>([]);
   reviews = signal<ReviewsResponse>({ reviews: [], moyenne: 0, total: 0 });
   error = signal('');
+  showMap = signal(false);
+  private sanitizer = inject(DomSanitizer);
+
+  hasCoords(r: Restaurant) {
+    return r.latitude != null && r.longitude != null;
+  }
+
+  // lien Google Maps : par coordonnées si on les a, sinon par adresse
+  mapsLink(r: Restaurant) {
+    const q = this.hasCoords(r) ? `${r.latitude},${r.longitude}` : encodeURIComponent(r.adresse);
+    return `https://www.google.com/maps/search/?api=1&query=${q}`;
+  }
+
+  // carte OpenStreetMap intégrée (l'URL n'est construite qu'avec des nombres, donc sûre)
+  mapUrl = computed<SafeResourceUrl | null>(() => {
+    const r = this.restaurant();
+    if (!r || !this.hasCoords(r)) return null;
+    const lat = Number(r.latitude), lng = Number(r.longitude);
+    const d = 0.006;
+    const url = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - d},${lat - d},${lng + d},${lat + d}&layer=mapnik&marker=${lat},${lng}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
 
   // formulaire d'avis
   note = signal(0);

@@ -16,6 +16,7 @@ export interface Restaurant {
   horaires: string; isOpen: boolean; owner: string;
   validation?: 'en_attente' | 'validee' | 'suspendue'; // absent = validee
   noteMoyenne?: number; nbAvis?: number; // avis clients (renvoyés par le backend)
+  latitude?: number | null; longitude?: number | null; // localisation (optionnelle)
 }
 export interface Category { _id: string; nom: string; description: string; restaurant: string; }
 export interface Dish {

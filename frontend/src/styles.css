@@ -18,6 +18,7 @@
 body {
   background-color: var(--fe-bg);
   color: var(--fe-charcoal);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 .btn-primary {
@@ -46,3 +47,52 @@ body {
 /* ===== Bonus : cartes avec effet "hover-lift" ===== */
 .card { transition: transform .2s ease, box-shadow .2s ease; }
 a:hover > .card, .card.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .12) !important; }
+
+/* ===== Design créatif ===== */
+.card { border: 0; border-radius: 1.1rem; overflow: hidden; }
+.btn { border-radius: 999px; }
+.form-control, .form-select { border-radius: .8rem; }
+.input-group > .form-control:first-child { border-radius: 999px 0 0 999px; }
+.input-group > .btn:last-child { border-radius: 0 999px 999px 0; }
+.fe-navbar { box-shadow: 0 2px 12px rgba(0, 0, 0, .25); }
+.fe-title { font-weight: 700; position: relative; padding-left: .9rem; }
+.fe-title::before { content: ''; position: absolute; left: 0; top: 15%; height: 70%; width: 5px; border-radius: 5px; background: var(--fe-orange); }
+
+/* Hero de l'accueil */
+.fe-hero {
+  position: relative; overflow: hidden; padding: 5rem 0 6rem;
+  background: linear-gradient(135deg, #FF6B35 0%, #e8403a 55%, #b0213b 100%);
+  clip-path: ellipse(120% 100% at 50% 0%);
+}
+.fe-underline { background: linear-gradient(transparent 62%, rgba(255, 255, 255, .35) 62%); }
+.fe-search { box-shadow: 0 10px 30px rgba(0, 0, 0, .25); border-radius: 999px; overflow: hidden; }
+.fe-float { position: absolute; font-size: 2.6rem; opacity: .85; animation: fe-bob 5s ease-in-out infinite; user-select: none; }
+.fe-f1 { top: 12%; left: 8%; } .fe-f2 { top: 60%; left: 4%; animation-delay: .8s; }
+.fe-f3 { top: 18%; right: 9%; animation-delay: 1.6s; } .fe-f4 { top: 62%; right: 6%; animation-delay: 2.2s; }
+.fe-f5 { top: 8%; left: 40%; animation-delay: 3s; font-size: 2rem; } .fe-f6 { bottom: 14%; left: 24%; animation-delay: 1.2s; font-size: 2rem; }
+@keyframes fe-bob { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-14px) rotate(6deg); } }
+@media (max-width: 768px) { .fe-float { display: none; } .fe-hero { padding: 3rem 0 4rem; } }
+
+/* Tuiles de cuisines */
+.fe-cuisine-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem;
+  height: 120px; border-radius: 1.2rem; color: #fff; text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .15); transition: transform .2s ease, box-shadow .2s ease;
+}
+.fe-cuisine-tile:hover { color: #fff; transform: translateY(-5px) scale(1.04); box-shadow: 0 12px 24px rgba(0, 0, 0, .22); }
+.fe-cuisine-emoji { font-size: 2.4rem; line-height: 1; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25)); }
+
+/* Cartes restaurant */
+.fe-resto-cover { position: relative; height: 150px; display: flex; align-items: center; justify-content: center; }
+.fe-resto-emoji { font-size: 4rem; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .3)); }
+.fe-pill-badge { z-index: 2; border-radius: 999px; padding: .4em .8em; }
+.fe-chip { background: #fff1ea; color: var(--fe-orange-dark); border-radius: 999px; padding: .15rem .65rem; font-weight: 500; }
+.fe-closed .fe-resto-cover { filter: grayscale(.7); }
+
+/* Étapes */
+.fe-step { background: #fff; border-radius: 1.2rem; padding: 1.5rem 1rem; box-shadow: 0 4px 14px rgba(0, 0, 0, .06); height: 100%; }
+.fe-step-icon { font-size: 2.4rem; width: 70px; height: 70px; margin: 0 auto .6rem; display: flex; align-items: center; justify-content: center; background: #fff1ea; border-radius: 50%; }
+
+/* Footer */
+.fe-footer-link { color: #adb5bd; text-decoration: none; line-height: 1.9; }
+.fe-footer-link:hover { color: var(--fe-orange); }
