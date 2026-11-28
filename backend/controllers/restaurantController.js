@@ -57,13 +57,13 @@ exports.getById = async (req, res) => {
 
 // According to the agreed work split, creation/deletion and validation are admin actions.
 exports.create = async (req, res) => {
-  const { nom, description, adresse, typeCuisine, image, fraisLivraison, horaires, isOpen, owner } = req.body;
+  const { nom, description, adresse, typeCuisine, image, fraisLivraison, horaires, isOpen, owner, latitude, longitude } = req.body;
   if (!nom || !adresse || !typeCuisine || !owner) {
     return res.status(400).json({ message: 'nom, adresse, typeCuisine et owner sont obligatoires' });
   }
   if (!mongoose.isValidObjectId(owner)) return res.status(400).json({ message: 'owner invalide' });
   const restaurant = await Restaurant.create({
-    nom, description, adresse, typeCuisine, image, fraisLivraison, horaires, isOpen, owner
+    nom, description, adresse, typeCuisine, image, fraisLivraison, horaires, isOpen, owner, latitude, longitude
   });
   res.status(201).json(restaurant);
 };
@@ -74,7 +74,7 @@ exports.update = async (req, res) => {
   if (!isAdmin(req) && String(restaurant.owner) !== String(getUserId(req))) {
     return res.status(403).json({ message: 'Vous ne pouvez modifier que votre restaurant' });
   }
-  const allowed = ['nom', 'description', 'adresse', 'typeCuisine', 'image', 'fraisLivraison', 'horaires', 'isOpen'];
+  const allowed = ['nom', 'description', 'adresse', 'typeCuisine', 'image', 'fraisLivraison', 'horaires', 'isOpen', 'latitude', 'longitude'];
   allowed.forEach(key => { if (req.body[key] !== undefined) restaurant[key] = req.body[key]; });
   await restaurant.save();
   res.json(restaurant);

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
+import { LocationService } from '../../core/services/location.service';
 
 @Component({
   selector: 'app-checkout',
@@ -16,7 +17,14 @@ import { OrderService } from '../../core/services/order.service';
       } @else {
         <div class="mb-3">
           <label class="form-label">Adresse de livraison *</label>
-          <input class="form-control" [ngModel]="adresse()" (ngModelChange)="adresse.set($event)" />
+          <div class="input-group">
+            <input class="form-control" placeholder="Rue, ville..." [ngModel]="adresse()" (ngModelChange)="adresse.set($event)" />
+            <button class="btn btn-outline-primary" type="button" [disabled]="locating()" (click)="useMyLocation()">
+              📍 {{ locating() ? 'Localisation...' : 'Ma position' }}
+            </button>
+          </div>
+          @if (loc.error()) { <div class="small text-danger mt-1">{{ loc.error() }}</div> }
+          <div class="form-text">Vous pouvez corriger l'adresse trouvée (ajoutez le numéro, l'étage, un repère...).</div>
         </div>
         <div class="mb-3">
           <label class="form-label">Remarque (optionnel)</label>
@@ -57,11 +65,20 @@ export class Checkout {
   cart = inject(CartService);
   private orders = inject(OrderService);
   private router = inject(Router);
+  loc = inject(LocationService);
+  locating = signal(false);
 
   adresse = signal('');
   remarque = signal('');
   error = signal('');
   loading = signal(false);
+
+  async useMyLocation() {
+    this.locating.set(true);
+    const pos = await this.loc.locate();
+    if (pos) this.adresse.set(await this.loc.addressFrom(pos));
+    this.locating.set(false);
+  }
 
   confirm() {
     this.error.set('');

@@ -11,6 +11,9 @@ const restaurantSchema = new mongoose.Schema({
   fraisLivraison: { type: Number, required: true, min: 0, default: 0 },
   horaires: { type: String, default: '' },
   isOpen: { type: Boolean, default: true },
+  // Localisation (optionnelle) : permet « Près de moi » et l'affichage sur la carte
+  latitude: { type: Number, min: -90, max: 90, default: null },
+  longitude: { type: Number, min: -180, max: 180, default: null },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   statutValidation: {
     type: String,

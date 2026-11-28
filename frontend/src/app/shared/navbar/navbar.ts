@@ -7,9 +7,9 @@ import { CartService } from '../../core/services/cart.service';
   selector: 'app-navbar',
   imports: [RouterLink, RouterLinkActive],
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-charcoal">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-charcoal sticky-top fe-navbar">
       <div class="container">
-        <a class="navbar-brand fw-bold text-orange" routerLink="/">FoodExpress</a>
+        <a class="navbar-brand fw-bold text-orange fs-4" routerLink="/">🍴 FoodExpress</a>
 
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#mainNav"
